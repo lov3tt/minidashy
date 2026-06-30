@@ -141,3 +141,33 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+# Environment / secrets — must never enter Git history
+.env
+.env.local
+.env.*.local
+
+# Docker local override
+docker-compose.override.yml
+
+# PHP / Composer
+/vendor/
+composer.phar
+.phpunit.result.cache
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+storage/logs/
+
+# Local data
+/mysql-data/
