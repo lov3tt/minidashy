@@ -1,3 +1,10 @@
+#What this does
+
+#When Docker builds an image, it sends all project files to the Docker daemon as a "build context."
+# Without this file, it would send node_modules/ (potentially hundreds of MB), 
+#your .env credentials, and files that aren't needed inside the container. 
+#This keeps the context small and prevents secrets from leaking into image layers.
+
 node_modules/
 frontend/node_modules/
 .git/

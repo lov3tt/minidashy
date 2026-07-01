@@ -1,4 +1,9 @@
 # My little taskrunner
+#Why SHELL = cmd.exe
+#SHELL = cmd.exe makes Make run its commands through cmd.exe instead of Bash. This means you type make up in
+#PowerShell, Make handles it internally via cmd — you never need to write or type any Bash yourself. The type command
+#(cmd's equivalent of cat) pipes SQL files into the MySQL container. The $$ escapes the $ so Make doesn't try to expand
+#the variable itself before passing it to cmd.
 SHELL = cmd.exe
 
 up:

@@ -57,7 +57,7 @@ tailwind.config = {
   <div class="flex items-center justify-between px-6 py-3">
     <div class="flex items-center gap-3">
       <div class="w-2 h-2 rounded-full bg-red animate-pulse"></div>
-      <span class="font-mono text-sm text-dim">anomaly-dashboard /</span>
+      <span class="font-mono text-sm text-dim">miniDashy-dashboard /</span>
       <span class="font-mono text-sm text-blue font-medium">build-guide.html</span>
     </div>
     <div class="flex items-center gap-4 text-xs text-dim font-mono">
@@ -236,7 +236,7 @@ Render container ($PORT)
     <!-- FOLDER STRUCTURE -->
     <div class="mb-10 p-5 rounded-lg border border-border bg-surface">
       <h2 class="text-sm font-semibold text-dim uppercase tracking-widest mb-4">Final folder structure</h2>
-      <pre class="text-xs font-mono leading-relaxed !bg-base"><code class="language-plaintext">anomaly-dashboard/
+      <pre class="text-xs font-mono leading-relaxed !bg-base"><code class="language-plaintext">miniDashy-dashboard/
 ├── .env                     # ⚠ local DB credentials — gitignored, never commit
 ├── .gitignore               # excludes .env, node_modules, vendor
 ├── .dockerignore            # keeps the build context lean
@@ -292,8 +292,8 @@ Render container ($PORT)
         </div>
         <div class="relative group mb-4">
           <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
-          <pre><code class="language-powershell">mkdir anomaly-dashboard
-cd anomaly-dashboard
+          <pre><code class="language-powershell">mkdir miniDashy-dashboard
+cd miniDashy-dashboard
 mkdir src, api, sql, nginx</code></pre>
         </div>
         <p class="text-xs text-dim mb-2 font-medium">src/index.php <span class="text-muted">— placeholder only, never called directly</span></p>
@@ -400,8 +400,8 @@ nginx/default.conf</code></pre>
         <div class="relative group">
           <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
           <pre><code class="language-bash">MYSQL_ROOT_PASSWORD=changeme_root
-MYSQL_DATABASE=anomaly_db
-MYSQL_USER=anomaly_user
+MYSQL_DATABASE=miniDashy_db
+MYSQL_USER=miniDashy_user
 MYSQL_PASSWORD=changeme_password</code></pre>
         </div>
         <p class="text-xs text-dim mt-3">Replace the placeholder passwords with real values. For production, these values come from Render's environment variable panel — not from this file.</p>
@@ -1463,7 +1463,7 @@ mysql --host=&lt;aiven-host&gt; --port=&lt;aiven-port&gt; --user=&lt;aiven-user&
         </div>
         <div class="note-box border-red/40 bg-red/5 p-3 rounded mb-4 text-xs text-dim">
           <p class="text-text font-medium mb-1">⚠ Check the Angular output path before deploying</p>
-          <p>The <code class="font-mono text-blue">COPY --from=angular-build /app/dist/anomaly-dashboard/browser/</code> path must exactly match what <code class="font-mono text-blue">ng build</code> produces. The project name segment (<code class="font-mono text-blue">anomaly-dashboard</code>) comes from <code class="font-mono text-blue">angular.json</code>'s <code class="font-mono text-blue">projects</code> key. Verify locally: run <code class="font-mono text-blue">npx ng build --configuration production</code> and check <code class="font-mono text-blue">frontend/dist/</code> for the actual path.</p>
+          <p>The <code class="font-mono text-blue">COPY --from=angular-build /app/dist/miniDashy-dashboard/browser/</code> path must exactly match what <code class="font-mono text-blue">ng build</code> produces. The project name segment (<code class="font-mono text-blue">miniDashy-dashboard</code>) comes from <code class="font-mono text-blue">angular.json</code>'s <code class="font-mono text-blue">projects</code> key. Verify locally: run <code class="font-mono text-blue">npx ng build --configuration production</code> and check <code class="font-mono text-blue">frontend/dist/</code> for the actual path.</p>
         </div>
         <div class="relative group">
           <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
@@ -1493,7 +1493,7 @@ RUN sed -i 's|listen = /var/run/php.*\.sock|listen = 127.0.0.1:9000|' \
     /usr/local/etc/php-fpm.d/www.conf || true
 
 # Copy Angular static files from Stage 1 (path must match actual ng build output)
-COPY --from=angular-build /app/dist/anomaly-dashboard/browser/ /var/www/html/
+COPY --from=angular-build /app/dist/miniDashy-dashboard/browser/ /var/www/html/
 COPY api/ /var/www/api/
 COPY nginx/render.conf /etc/nginx/conf.d/render.conf.template
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -1627,7 +1627,7 @@ exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf</code></pre
           <pre><code class="language-powershell">git init
 git add .
 git commit -m "Initial commit"
-git remote add origin https://github.com/&lt;your-username&gt;/anomaly-dashboard.git
+git remote add origin https://github.com/&lt;your-username&gt;/miniDashy-dashboard.git
 git push -u origin main</code></pre>
         </div>
       </div>
