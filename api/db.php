@@ -1,3 +1,5 @@
+<?php
+
 /*
 
 This file is the core engine
@@ -20,7 +22,7 @@ Orchestrator — runs both rules, collects whichever ones fired. Returns empty a
 
 */
 
-<?php
+
 // api/db.php — shared: DB connection + all detection functions.
 // NOT an endpoint. Loaded via require_once by players.php and player.php.
 

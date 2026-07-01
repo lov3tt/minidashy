@@ -1,0 +1,27 @@
+<div class="backdrop" (click)="close.emit()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <button class="close-btn" (click)="close.emit()">✕</button>
+    <ng-container *ngIf="data">
+      <h2>{{ data.player.name }}</h2>
+      <p>Account age: {{ data.player.account_age_days }} days</p>
+      <div *ngIf="data.flags.length" class="flags">
+        <h3>⚠️ Flags</h3>
+        <ul><li *ngFor="let f of data.flags">{{ f }}</li></ul>
+      </div>
+      <h3>Event History</h3>
+      <table>
+        <thead><tr>
+          <th>Kills</th><th>Deaths</th>
+          <th>Accuracy</th><th>Session</th><th>Recorded</th>
+        </tr></thead>
+        <tbody>
+          <tr *ngFor="let e of data.events">
+            <td>{{ e.kills }}</td><td>{{ e.deaths }}</td>
+            <td>{{ e.accuracy }}%</td><td>{{ e.session_minutes }}m</td>
+            <td>{{ e.recorded_at }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+  </div>
+</div>

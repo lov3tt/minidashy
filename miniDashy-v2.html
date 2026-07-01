@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>miniDashy — Build Guide</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { sans: ['Inter','sans-serif'], mono: ['JetBrains Mono','monospace'] },
+      colors: {
+        base:'#0d1117', surface:'#161b22', border:'#21262d', muted:'#30363d',
+        text:'#e6edf3', dim:'#8b949e', blue:'#58a6ff', green:'#3fb950',
+        red:'#f85149', amber:'#e3b341', purple:'#bc8cff',
+      }
+    }
+  }
+}
+</script>
+<style>
+  body { background:#0d1117; color:#e6edf3; font-family:'Inter',sans-serif; }
+  pre code.hljs { background:#161b22 !important; font-family:'JetBrains Mono',monospace; font-size:0.78rem; line-height:1.6; }
+  pre { background:#161b22; border:1px solid #21262d; border-radius:8px; overflow:hidden; }
+  ::-webkit-scrollbar { width:6px; height:6px; }
+  ::-webkit-scrollbar-track { background:#0d1117; }
+  ::-webkit-scrollbar-thumb { background:#30363d; border-radius:3px; }
+  .step-card { scroll-margin-top:24px; }
+  .sidebar-link { transition:all 0.15s; }
+  .sidebar-link.active { color:#58a6ff; border-left-color:#58a6ff; }
+  .sidebar-link:not(.active) { border-left-color:transparent; }
+  .copy-btn { transition:all 0.2s; }
+  .copy-btn:hover { background:#30363d; }
+  .note { border-left:3px solid; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="fixed top-0 left-0 right-0 z-50 border-b border-border bg-base/95 backdrop-blur-sm">
+  <div class="flex items-center justify-between px-6 py-3">
+    <div class="flex items-center gap-3">
+      <div class="w-2 h-2 rounded-full bg-red animate-pulse"></div>
+      <span class="font-mono text-sm text-dim">miniDashy /</span>
+      <span class="font-mono text-sm text-blue font-medium">build-guide.html</span>
+    </div>
+    <div class="flex items-center gap-4 text-xs text-dim font-mono">
+      <span class="flex items-center gap-1.5"><span class="text-green">✓</span> PHP 8.5 verified</span>
+      <span class="flex items-center gap-1.5"><span class="text-green">✓</span> Standalone Angular 17</span>
+      <span class="px-2 py-0.5 rounded bg-muted text-text">27 steps</span>
+    </div>
+  </div>
+</header>
+
+<div class="flex pt-12">
+
+<!-- SIDEBAR -->
+<aside class="fixed top-12 left-0 bottom-0 w-60 overflow-y-auto border-r border-border bg-surface/50 p-4 hidden lg:block">
+  <p class="text-xs text-dim uppercase tracking-widest font-semibold mb-3">Navigation</p>
+  <p class="text-xs text-amber font-semibold uppercase tracking-wider mb-1 px-2">Part 1 — Local</p>
+  <nav class="space-y-0.5 mb-4">
+    <a href="#step-0"  class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">0</span> Root folder</a>
+    <a href="#step-1"  class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">1</span> .gitignore</a>
+    <a href="#step-2"  class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">2</span> .dockerignore</a>
+    <a href="#step-3"  class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">3</span> .env</a>
+    <a href="#step-4"  class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">4</span> Dockerfile</a>
+    <a href="#step-5"  class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">5</span> docker-compose.yml</a>
+    <a href="#step-6"  class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">6</span> nginx/default.conf</a>
+    <a href="#step-7"  class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">7</span> Makefile</a>
+    <a href="#step-7b" class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">7b</span> Placeholder + make up</a>
+    <a href="#step-8"  class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">8</span> schema.sql</a>
+    <a href="#step-9"  class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">9</span> seed.sql</a>
+    <a href="#step-10" class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">10</span> api/db.php</a>
+    <a href="#step-11" class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">11</span> api/players.php</a>
+    <a href="#step-12" class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">12</span> api/player.php</a>
+    <a href="#step-13" class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">13</span> Angular scaffold</a>
+    <a href="#step-14" class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">14</span> frontend/Dockerfile</a>
+    <a href="#step-15" class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">15</span> app.config.ts</a>
+    <a href="#step-16" class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">16</span> player.service.ts</a>
+    <a href="#step-17" class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">17</span> Generate components</a>
+    <a href="#step-18" class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">18</span> dashboard component</a>
+    <a href="#step-19" class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">19</span> player-detail component</a>
+    <a href="#step-20" class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">20</span> Wire app root</a>
+    <a href="#step-21" class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">21</span> styles.css</a>
+    <a href="#step-22" class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">22</span> Local verify</a>
+  </nav>
+  <p class="text-xs text-purple font-semibold uppercase tracking-wider mb-1 px-2">Part 2 — Production</p>
+  <nav class="space-y-0.5 mb-4">
+    <a href="#step-23" class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">23</span> Aiven MySQL</a>
+    <a href="#step-24" class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">24</span> Dockerfile.render</a>
+    <a href="#step-25" class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">25</span> nginx/render.conf</a>
+    <a href="#step-26" class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">26</span> supervisord.conf</a>
+    <a href="#step-27" class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">27</span> start.sh</a>
+    <a href="#step-28" class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">28</span> Push to GitHub</a>
+    <a href="#step-29" class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">29</span> Render service</a>
+    <a href="#step-30" class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="font-mono text-muted w-5 text-right">30</span> Prod verify</a>
+  </nav>
+  <div class="border-t border-border pt-3">
+    <a href="#smoke-tests" class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="text-green">✓</span> Smoke test results</a>
+    <a href="#file-inventory" class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="text-blue">≡</span> File inventory</a>
+    <a href="#lessons" class="sidebar-link flex items-center gap-2 px-2 py-1.5 text-xs text-dim hover:text-text border-l-2 rounded-r"><span class="text-amber">!</span> Lessons learned</a>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="lg:ml-60 flex-1 min-w-0 px-6 lg:px-10 py-8 max-w-4xl">
+
+  <!-- HERO -->
+  <div class="mb-8">
+    <div class="flex flex-wrap items-center gap-2 mb-3">
+      <span class="px-2 py-0.5 rounded text-xs font-mono bg-amber/10 text-amber border border-amber/20">PHP 8.5</span>
+      <span class="px-2 py-0.5 rounded text-xs font-mono bg-blue/10 text-blue border border-blue/20">Angular 17 Standalone</span>
+      <span class="px-2 py-0.5 rounded text-xs font-mono bg-green/10 text-green border border-green/20">MySQL 8.0</span>
+      <span class="px-2 py-0.5 rounded text-xs font-mono bg-purple/10 text-purple border border-purple/20">Docker</span>
+      <span class="px-2 py-0.5 rounded text-xs font-mono bg-red/10 text-red border border-red/20">PowerShell</span>
+    </div>
+    <h1 class="text-3xl font-bold text-text mb-2">miniDashy Build Guide</h1>
+    <p class="text-dim text-base mb-4">Player anomaly detection dashboard — Local Docker + Render/Aiven production. Battle-tested and corrected from a real build.</p>
+    <div class="p-4 rounded-lg bg-amber/5 border border-amber/20 text-xs text-dim mb-3">
+      <p class="text-amber font-semibold mb-1">This guide is the corrected version</p>
+      <p>It fixes four real issues found during an actual build: the broken Step 7 checkpoint that left <code class="font-mono text-blue">db</code> not running, the missing <code class="font-mono">&lt;?php</code> tag in <code class="font-mono text-blue">db.php</code>, the NgModule vs standalone mismatch for Angular 17, and the missing global CSS that caused a white background with unreadable dark text. All component code is written for <strong class="text-text">standalone Angular 17</strong> — the actual default when you run <code class="font-mono text-blue">ng new</code>.</p>
+    </div>
+    <div class="p-4 rounded-lg bg-green/5 border border-green/20 text-xs text-dim">
+      <p class="text-green font-semibold mb-1">✓ Smoke-tested on PHP 8.5 + real MySQL</p>
+      <p>All 7 tests pass — flagging logic, error paths, and PHP 8.5 SSL constant branch verified against actual code extracted from this guide.</p>
+    </div>
+  </div>
+
+  <!-- ARCHITECTURE -->
+  <div class="mb-8 p-5 rounded-lg border border-border bg-surface">
+    <h2 class="text-xs font-semibold text-dim uppercase tracking-widest mb-4">Architecture</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="p-3 rounded bg-base border border-border">
+        <p class="text-xs font-semibold text-amber mb-2">Local (5 containers)</p>
+        <pre class="text-xs text-dim font-mono leading-relaxed bg-transparent border-0 p-0 overflow-x-auto"><code class="bg-transparent !p-0">Browser
+  ↓
+Nginx :8080
+  ├── /api/* → PHP-FPM :9000 → MySQL :3307
+  └── /*     → Angular dev :4200</code></pre>
+      </div>
+      <div class="p-3 rounded bg-base border border-border">
+        <p class="text-xs font-semibold text-purple mb-2">Production (1 container)</p>
+        <pre class="text-xs text-dim font-mono leading-relaxed bg-transparent border-0 p-0 overflow-x-auto"><code class="bg-transparent !p-0">Browser
+  ↓
+Render ($PORT)
+  supervisord:
+  ├── Nginx → /api/* → PHP-FPM
+  │         → /*     → static files
+  └── PHP-FPM → Aiven MySQL</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOLDER STRUCTURE -->
+  <div class="mb-8 p-5 rounded-lg border border-border bg-surface">
+    <h2 class="text-xs font-semibold text-dim uppercase tracking-widest mb-4">Final folder structure</h2>
+    <div class="relative group">
+      <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+      <pre class="text-xs font-mono leading-relaxed"><code class="language-plaintext">minidashy/
+├── .env                      # local credentials — gitignored
+├── .gitignore
+├── .dockerignore
+├── Dockerfile                # local PHP 8.5-FPM image
+├── Dockerfile.render         # production: multi-stage build
+├── docker-compose.yml        # local: 5 containers
+├── Makefile                  # SHELL=cmd.exe — works from PowerShell
+├── start.sh                  # production: injects $PORT into Nginx
+├── supervisord.conf          # production: runs Nginx + PHP-FPM together
+├── nginx/
+│   ├── default.conf          # local routing
+│   └── render.conf           # production routing
+├── src/
+│   └── index.php             # placeholder — PHP-FPM needs a document root
+├── api/
+│   ├── db.php                # connection + 3 detection functions
+│   ├── players.php           # GET /api/players.php
+│   └── player.php            # GET /api/player.php?id=N
+├── sql/
+│   ├── schema.sql
+│   └── seed.sql              # 26 players: 20 normal, 4 threshold, 2 statistical
+└── frontend/                 # created by ng new at Step 13
+    ├── Dockerfile            # local dev server
+    ├── package.json
+    ├── angular.json
+    ├── tsconfig.json
+    └── src/
+        ├── styles.css        # global dark background — must be set
+        └── app/
+            ├── app.component.ts
+            ├── app.component.html
+            ├── app.config.ts       # standalone bootstrap — add provideHttpClient()
+            ├── services/
+            │   └── player.service.ts
+            └── components/
+                ├── dashboard/
+                └── player-detail/</code></pre>
+    </div>
+  </div>
+
+  <!-- PART 1 -->
+  <div class="flex items-center gap-4 mb-6">
+    <div class="h-px flex-1 bg-border"></div>
+    <span class="px-4 py-1.5 rounded-full text-sm font-semibold bg-amber/10 text-amber border border-amber/20">Part 1 — Local Docker Development</span>
+    <div class="h-px flex-1 bg-border"></div>
+  </div>
+
+  <!-- STEP 0 -->
+  <div id="step-0" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">0</span>
+      <span class="font-medium text-text">Root folder + src placeholder</span>
+    </div>
+    <div class="p-5">
+      <div class="note border-blue/40 bg-blue/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-text font-medium mb-1">What this does</p>
+        <p>Creates the project root and required subdirectories. <code class="font-mono text-blue">src/</code> must exist with a file in it — PHP-FPM requires a document root directory to start. Your real API logic lives in <code class="font-mono text-blue">api/</code> not <code class="font-mono text-blue">src/</code>, but Nginx/PHP-FPM still need the root to exist.</p>
+      </div>
+      <div class="relative group mb-4">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-powershell">mkdir minidashy
+cd minidashy
+mkdir src, api, sql, nginx</code></pre>
+      </div>
+      <p class="text-xs text-dim font-medium mb-2">src/index.php</p>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-php">&lt;?php
+echo "PHP container is running. API lives at /api/.";</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div id="step-1" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">1</span>
+      <span class="font-medium text-text">.gitignore</span>
+      <span class="ml-auto px-2 py-0.5 rounded text-xs font-mono bg-red/10 text-red border border-red/20">create before .env</span>
+    </div>
+    <div class="p-5">
+      <div class="note border-red/40 bg-red/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-text font-medium mb-1">Create this before .env</p>
+        <p>If <code class="font-mono text-blue">.env</code> enters Git history even once it can be recovered from the commit log even after deletion. Create <code class="font-mono text-blue">.gitignore</code> first so there's zero chance of accidentally committing credentials.</p>
+      </div>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-bash"># Secrets — never commit
+.env
+.env.local
+.env.*.local
+
+# Docker
+docker-compose.override.yml
+
+# PHP
+/vendor/
+composer.phar
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Logs
+*.log
+storage/logs/
+/mysql-data/</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div id="step-2" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">2</span>
+      <span class="font-medium text-text">.dockerignore</span>
+    </div>
+    <div class="p-5">
+      <div class="note border-blue/40 bg-blue/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-text font-medium mb-1">What this does</p>
+        <p>Stops Docker from sending <code class="font-mono text-blue">node_modules/</code> (hundreds of MB), your <code class="font-mono text-blue">.env</code> credentials, and irrelevant files into the build context. Keeps builds fast and prevents secrets from leaking into image layers.</p>
+      </div>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-bash">node_modules/
+frontend/node_modules/
+.git/
+.env
+*.md
+Makefile
+sql/
+.gitignore
+docker-compose.yml
+Dockerfile
+nginx/default.conf</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div id="step-3" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">3</span>
+      <span class="font-medium text-text">.env</span>
+      <span class="ml-auto px-2 py-0.5 rounded text-xs font-mono bg-red/10 text-red border border-red/20">⚠ never commit</span>
+    </div>
+    <div class="p-5">
+      <div class="note border-amber/40 bg-amber/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-text font-medium mb-1">How this is used</p>
+        <p>Docker Compose reads this and injects each value as an environment variable into the containers. <code class="font-mono text-blue">db.php</code> reads them back with <code class="font-mono text-blue">getenv()</code>. This is the only file that changes between local and production — the PHP code itself never changes.</p>
+      </div>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-bash">MYSQL_ROOT_PASSWORD=changeme_root
+MYSQL_DATABASE=anomaly_db
+MYSQL_USER=anomaly_user
+MYSQL_PASSWORD=changeme_password</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div id="step-4" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">4</span>
+      <span class="font-medium text-text">Dockerfile</span>
+      <span class="ml-auto text-xs font-mono text-dim">local PHP-FPM · project root</span>
+    </div>
+    <div class="p-5">
+      <div class="note border-blue/40 bg-blue/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-text font-medium mb-1">Local only</p>
+        <p>This builds the local PHP container only. Installs <code class="font-mono text-blue">pdo_mysql</code> for database queries and <code class="font-mono text-blue">mysqli</code> as a secondary driver. The production image is <code class="font-mono text-blue">Dockerfile.render</code> (Step 24) which adds Nginx, supervisord, and the Angular build stage.</p>
+      </div>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-dockerfile">FROM php:8.5-fpm
+
+RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    libzip-dev \
+    unzip \
+  && docker-php-ext-install pdo pdo_mysql mysqli zip \
+  && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /var/www/html</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div id="step-5" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">5</span>
+      <span class="font-medium text-text">docker-compose.yml</span>
+      <span class="ml-auto text-xs font-mono text-dim">5 containers</span>
+    </div>
+    <div class="p-5">
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-2 mb-4">
+        <div class="p-2 rounded bg-base border border-border text-xs"><p class="text-blue font-mono font-medium">app</p><p class="text-dim">PHP 8.5-FPM · port 9000</p></div>
+        <div class="p-2 rounded bg-base border border-border text-xs"><p class="text-blue font-mono font-medium">frontend</p><p class="text-dim">Angular dev · :4200</p></div>
+        <div class="p-2 rounded bg-base border border-border text-xs"><p class="text-blue font-mono font-medium">nginx</p><p class="text-dim">Reverse proxy · :8080</p></div>
+        <div class="p-2 rounded bg-base border border-border text-xs"><p class="text-blue font-mono font-medium">db</p><p class="text-dim">MySQL 8.0 · :3307</p></div>
+        <div class="p-2 rounded bg-base border border-border text-xs"><p class="text-blue font-mono font-medium">phpmyadmin</p><p class="text-dim">DB GUI · :8081</p></div>
+      </div>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-yaml">services:
+
+  app:
+    build: .
+    env_file:
+      - .env
+    volumes:
+      - ./src:/var/www/html
+      - ./api:/var/www/api
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "4200:4200"
+    depends_on:
+      - app
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./api:/var/www/api
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+      - frontend
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+    depends_on:
+      - db
+
+volumes:
+  db_data:</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 6 -->
+  <div id="step-6" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">6</span>
+      <span class="font-medium text-text">nginx/default.conf</span>
+    </div>
+    <div class="p-5">
+      <div class="note border-blue/40 bg-blue/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-text font-medium mb-1">How routing works</p>
+        <p>Nginx is the single entry point on port 8080. Requests to <code class="font-mono text-blue">/api/*</code> are forwarded to PHP-FPM via FastCGI on port 9000. Everything else proxies to Angular's dev server on port 4200. The <code class="font-mono text-blue">/ng-cli-ws</code> block keeps Angular's hot-reload WebSocket alive through the proxy.</p>
+      </div>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-nginx">server {
+    listen 80;
+
+    location /api/ {
+        root /var/www;
+        try_files $uri =404;
+        fastcgi_pass app:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+
+    location / {
+        proxy_pass http://frontend:4200;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_read_timeout 300;
+        proxy_connect_timeout 300;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    location /ng-cli-ws {
+        proxy_pass http://frontend:4200;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+    }
+}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 7 -->
+  <div id="step-7" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">7</span>
+      <span class="font-medium text-text">Makefile</span>
+      <span class="ml-auto px-2 py-0.5 rounded text-xs font-mono bg-green/10 text-green border border-green/20">PowerShell compatible</span>
+    </div>
+    <div class="p-5">
+      <div class="note border-green/40 bg-green/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-text font-medium mb-1">Why SHELL = cmd.exe</p>
+        <p>Makes Make run commands through <code class="font-mono text-blue">cmd.exe</code> instead of Bash. You type <code class="font-mono text-blue">make up</code> in PowerShell — Make handles everything internally via cmd. The <code class="font-mono text-blue">type</code> command is cmd's equivalent of <code class="font-mono text-blue">cat</code> for piping SQL files. The <code class="font-mono text-blue">$$</code> escapes dollar signs so Make doesn't expand them before passing to cmd.</p>
+      </div>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-makefile">SHELL = cmd.exe
+
+up:
+	docker compose up -d --build
+
+down:
+	docker compose down
+
+down-clean:
+	docker compose down -v
+
+ps:
+	docker compose ps
+
+logs-app:
+	docker compose logs -f app
+
+logs-db:
+	docker compose logs -f db
+
+logs-nginx:
+	docker compose logs -f nginx
+
+db-schema:
+	type sql\schema.sql | docker compose exec -T db bash -c "mysql --default-character-set=utf8mb4 -u \"$$MYSQL_USER\" -p\"$$MYSQL_PASSWORD\" \"$$MYSQL_DATABASE\""
+
+db-seed:
+	type sql\seed.sql | docker compose exec -T db bash -c "mysql --default-character-set=utf8mb4 -u \"$$MYSQL_USER\" -p\"$$MYSQL_PASSWORD\" \"$$MYSQL_DATABASE\""
+
+db-shell:
+	docker compose exec db bash -c "mysql --default-character-set=utf8mb4 -u \"$$MYSQL_USER\" -p\"$$MYSQL_PASSWORD\" \"$$MYSQL_DATABASE\""
+
+db-players:
+	docker compose exec db bash -c "mysql --default-character-set=utf8mb4 -u \"$$MYSQL_USER\" -p\"$$MYSQL_PASSWORD\" \"$$MYSQL_DATABASE\" -e \"SELECT * FROM players;\""
+
+db-events:
+	docker compose exec db bash -c "mysql --default-character-set=utf8mb4 -u \"$$MYSQL_USER\" -p\"$$MYSQL_PASSWORD\" \"$$MYSQL_DATABASE\" -e \"SELECT * FROM events ORDER BY recorded_at DESC LIMIT 20;\""
+
+db-tables:
+	docker compose exec db bash -c "mysql --default-character-set=utf8mb4 -u \"$$MYSQL_USER\" -p\"$$MYSQL_PASSWORD\" \"$$MYSQL_DATABASE\" -e \"SHOW TABLES;\""
+
+shell:
+	docker compose exec app bash</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 7b — PLACEHOLDER + MAKE UP -->
+  <div id="step-7b" class="step-card mb-6 rounded-lg border border-red/30 bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-red/20 bg-red/5">
+      <span class="w-7 h-7 rounded-full bg-red/20 flex items-center justify-center text-xs font-mono font-bold text-red">7b</span>
+      <span class="font-medium text-text">Placeholder frontend/Dockerfile → first make up</span>
+      <span class="ml-auto px-2 py-0.5 rounded text-xs font-mono bg-red/10 text-red border border-red/20">critical — do not skip</span>
+    </div>
+    <div class="p-5">
+      <div class="note border-red/40 bg-red/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-red font-semibold mb-1">Why this step exists</p>
+        <p>Docker Compose aborts the <strong class="text-text">entire build</strong> — including the <code class="font-mono text-blue">db</code> container — if <code class="font-mono text-blue">frontend/Dockerfile</code> is missing or empty. This means <code class="font-mono text-blue">make db-schema</code> will fail with "service db is not running" even though you haven't touched the frontend yet. The fix is a one-line placeholder that satisfies Docker until the real Dockerfile is written at Step 14.</p>
+      </div>
+      <p class="text-xs text-dim mb-2 font-medium">1. Create the folder and one-line placeholder Dockerfile:</p>
+      <div class="relative group mb-4">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-powershell">mkdir frontend</code></pre>
+      </div>
+      <p class="text-xs text-dim mb-2">Create <code class="font-mono text-blue">frontend/Dockerfile</code> with exactly this one line:</p>
+      <div class="relative group mb-4">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-dockerfile">FROM node:20-alpine</code></pre>
+      </div>
+      <p class="text-xs text-dim mb-2 font-medium">2. Now start all containers:</p>
+      <div class="relative group mb-4">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-powershell">make up</code></pre>
+      </div>
+      <div class="p-3 rounded bg-green/5 border border-green/20 text-xs text-dim">
+        <span class="text-green font-semibold">Checkpoint:</span> Run <code class="font-mono text-blue">make ps</code> — all 5 containers should show <strong class="text-text">Up</strong>. If <code class="font-mono text-blue">db</code> is running you're good. Continue writing SQL and PHP files in Steps 8–12 before touching the frontend.
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 8 -->
+  <div id="step-8" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">8</span>
+      <span class="font-medium text-text">sql/schema.sql</span>
+    </div>
+    <div class="p-5">
+      <div class="note border-blue/40 bg-blue/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-text font-medium mb-1">Two tables</p>
+        <p><strong class="text-text">players</strong> — static identity (name, account age). <strong class="text-text">events</strong> — one row per session with behavioral stats. The FOREIGN KEY enforces integrity: you can't insert an event for a non-existent player. <code class="font-mono text-blue">utf8mb4</code> is required — standard MySQL <code class="font-mono text-blue">utf8</code> is 3-byte and can't store emoji.</p>
+      </div>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-sql">SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+
+CREATE TABLE IF NOT EXISTS players (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    account_age_days INT NOT NULL
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS events (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    player_id INT NOT NULL,
+    kills INT NOT NULL,
+    deaths INT NOT NULL,
+    accuracy DECIMAL(5,2) NOT NULL,
+    session_minutes INT NOT NULL,
+    recorded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (player_id) REFERENCES players(id),
+    INDEX idx_player_id (player_id)
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 9 -->
+  <div id="step-9" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">9</span>
+      <span class="font-medium text-text">sql/seed.sql</span>
+      <span class="ml-auto text-xs font-mono text-dim">26 players · 3 groups</span>
+    </div>
+    <div class="p-5">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-4">
+        <div class="p-3 rounded bg-base border border-green/20 text-xs"><p class="text-green font-semibold mb-1">Normal (20)</p><p class="text-dim">Realistic accuracy 12–42%, kills/min ~0.2–0.4. Neither rule fires.</p></div>
+        <div class="p-3 rounded bg-base border border-red/20 text-xs"><p class="text-red font-semibold mb-1">Threshold-only (4)</p><p class="text-dim">IDs 21–24. Accuracy &gt;80% + account &lt;14 days. Statistical rule won't catch these.</p></div>
+        <div class="p-3 rounded bg-base border border-amber/20 text-xs"><p class="text-amber font-semibold mb-1">Statistical-only (2)</p><p class="text-dim">IDs 25–26. 5+ kills/min (z &gt; 3.0), accuracy under 80%. Threshold rule won't catch these.</p></div>
+      </div>
+      <div class="relative group mb-4">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-sql">SET NAMES utf8mb4;
+
+INSERT INTO players (name, account_age_days) VALUES
+    ('xX_Shadow_Xx', 412), ('PixelRunner99', 88), ('GhostBlade', 730),
+    ('NoobMaster22', 14), ('SkySniper', 365), ('TacoTuesday', 200),
+    ('FrostByte', 540), ('RogueAgent', 95), ('CrimsonWolf', 680),
+    ('ViperStrike', 30), ('NightOwl_42', 410), ('IronFist', 220),
+    ('SilentAssassin', 600), ('TurboTurtle', 75), ('BlazeRunner', 333),
+    ('ThunderClap', 150), ('MysticArrow', 480), ('CobaltFlame', 60),
+    ('SteelHawk', 290), ('VortexGamer', 18);
+
+INSERT INTO players (name, account_age_days) VALUES
+    ('NewAccount_777', 1), ('TooGoodToBeTrue', 5),
+    ('SmurfSuspect', 3), ('AimAssistMaybe', 8),
+    ('SpeedKill_Sus_A', 300), ('SpeedKill_Sus_B', 450);
+
+-- Normal players
+INSERT INTO events (player_id, kills, deaths, accuracy, session_minutes) VALUES
+    (1,8,11,22.40,35),(2,4,9,18.10,22),(3,14,10,31.50,48),
+    (4,2,8,14.30,15),(5,11,12,28.90,40),(6,6,10,19.70,25),
+    (7,16,9,35.20,55),(8,5,11,17.60,20),(9,13,14,26.80,45),
+    (10,3,7,15.90,18),(11,9,10,24.10,33),(12,7,9,21.30,28),
+    (13,15,11,33.40,50),(14,4,8,16.50,19),(15,10,13,23.70,38),
+    (16,6,9,20.20,24),(17,12,10,29.60,42),(18,5,10,18.80,21),
+    (19,9,11,25.40,31),(20,8,12,22.90,29);
+
+-- Threshold-only: absurd accuracy + brand-new accounts
+INSERT INTO events (player_id, kills, deaths, accuracy, session_minutes) VALUES
+    (21,38,2,91.50,30),(22,45,1,95.20,25),
+    (23,30,3,88.70,20),(24,50,0,97.80,35);
+
+-- Statistical-only: extreme kills/min, accuracy UNDER 80% on purpose
+INSERT INTO events (player_id, kills, deaths, accuracy, session_minutes) VALUES
+    (25,40,5,42.00,8),(26,55,3,38.50,10);</code></pre>
+      </div>
+      <div class="p-3 rounded bg-green/5 border border-green/20 text-xs text-dim">
+        <span class="text-green font-semibold">Checkpoint:</span>
+        <code class="font-mono text-blue ml-1">make db-schema</code>
+        <code class="font-mono text-blue ml-2">make db-seed</code>
+        <code class="font-mono text-blue ml-2">make db-players</code>
+        <span class="ml-1">— you should see 26 rows.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 10 -->
+  <div id="step-10" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">10</span>
+      <span class="font-medium text-text">api/db.php</span>
+      <span class="ml-auto text-xs font-mono text-dim">connection + 3 detection functions</span>
+    </div>
+    <div class="p-5">
+      <div class="note border-red/40 bg-red/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-red font-semibold mb-1">⚠ The file MUST start with &lt;?php on line 1</p>
+        <p>If anything appears before <code class="font-mono text-blue">&lt;?php</code> — including a comment — PHP won't execute the file and will serve it as raw text. Angular will receive comment text instead of JSON and fail to parse it with a confusing error. Line 1 must be exactly <code class="font-mono text-blue">&lt;?php</code> and nothing else.</p>
+      </div>
+      <div class="note border-blue/40 bg-blue/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-text font-medium mb-1">Not an endpoint</p>
+        <p>This file never outputs anything on its own. <code class="font-mono text-blue">players.php</code> and <code class="font-mono text-blue">player.php</code> load it with <code class="font-mono text-blue">require_once</code>. It provides the <code class="font-mono text-blue">$pdo</code> connection and three functions. Works unmodified in both local Docker and Render/Aiven — reads everything from environment variables.</p>
+      </div>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-php">&lt;?php
+// api/db.php — DB connection + detection functions. NOT an endpoint.
+// Loaded via require_once by players.php and player.php.
+
+$host   = getenv('MYSQL_HOST') ?: 'db';
+$port   = getenv('MYSQL_PORT') ?: '3306';
+$dbname = getenv('MYSQL_DATABASE');
+$user   = getenv('MYSQL_USER');
+$pass   = getenv('MYSQL_PASSWORD');
+$useSSL = getenv('MYSQL_SSL') === 'true';
+
+$dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
+$options = [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION];
+
+// PHP 8.5 renamed the SSL constant — check at runtime for whichever exists.
+if ($useSSL) {
+    $sslConstant = defined('Pdo\Mysql::ATTR_SSL_VERIFY_SERVER_CERT')
+        ? Pdo\Mysql::ATTR_SSL_VERIFY_SERVER_CERT
+        : PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT;
+    $options[$sslConstant] = false;
+}
+
+try {
+    $pdo = new PDO($dsn, $user, $pass, $options);
+} catch (PDOException $e) {
+    header('Content-Type: application/json');
+    http_response_code(500);
+    echo json_encode(['error' => 'Database connection failed: ' . $e->getMessage()]);
+    exit;
+}
+
+// Rule 1: Fixed threshold.
+// Catches: accuracy >80% on account under 14 days old.
+// Strength: instant, auditable. Weakness: easy to evade by staying under 80%.
+function checkThresholdRule(array $event): ?string
+{
+    if ($event['accuracy'] > 80.0 && $event['account_age_days'] < 14) {
+        return "Accuracy {$event['accuracy']}% on an account only "
+             . "{$event['account_age_days']} days old (threshold: >80% under 14 days)";
+    }
+    return null;
+}
+
+// Rule 2: Population-relative z-score.
+// Catches: kills/min more than 3 standard deviations above the population mean.
+// Strength: adapts to the whole player base, harder to game.
+// Weakness: recomputes population stats on every call (fine at this scale).
+function checkStatisticalRule(PDO $pdo, array $event): ?string
+{
+    $stmt = $pdo->query("SELECT kills, session_minutes FROM events");
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $rates = array_map(
+        fn($r) => $r['session_minutes'] > 0 ? $r['kills'] / $r['session_minutes'] : 0,
+        $rows
+    );
+
+    $mean = array_sum($rates) / count($rates);
+    $variance = array_sum(array_map(fn($r) => ($r - $mean) ** 2, $rates)) / count($rates);
+    $stddev = sqrt($variance);
+
+    $playerRate = $event['session_minutes'] > 0
+        ? $event['kills'] / $event['session_minutes'] : 0;
+
+    if ($stddev == 0) return null;
+
+    $zScore = ($playerRate - $mean) / $stddev;
+
+    if ($zScore > 3.0) {
+        return sprintf(
+            "Kill rate %.2f kills/min is %.1f standard deviations above the population mean (%.2f)",
+            $playerRate, $zScore, $mean
+        );
+    }
+    return null;
+}
+
+// Orchestrator: runs both rules, returns array of fired flags.
+// Empty array = clean player.
+function detectAnomalies(PDO $pdo, array $event): array
+{
+    $flags = array_filter([
+        checkThresholdRule($event),
+        checkStatisticalRule($pdo, $event),
+    ]);
+    return array_values($flags);
+}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 11 -->
+  <div id="step-11" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">11</span>
+      <span class="font-medium text-text">api/players.php</span>
+      <span class="ml-auto px-2 py-0.5 rounded text-xs font-mono bg-blue/10 text-blue border border-blue/20">GET /api/players.php</span>
+    </div>
+    <div class="p-5">
+      <div class="note border-blue/40 bg-blue/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-text font-medium mb-1">What this returns</p>
+        <p>All 26 players with their most recent event and flag status. The subquery <code class="font-mono text-blue">WHERE e.id = (SELECT MAX(id)...)</code> picks only the latest event row per player. The <code class="font-mono text-blue">(int)</code> and <code class="font-mono text-blue">(float)</code> casts are required — PDO returns everything as strings by default, which would break Angular's number comparisons.</p>
+      </div>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-php">&lt;?php
+// GET /api/players.php — all players with latest event + flag status.
+
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(200); exit; }
+if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+    http_response_code(405);
+    echo json_encode(['error' => 'Method not allowed. Use GET.']);
+    exit;
+}
+
+require_once __DIR__ . '/db.php';
+
+$stmt = $pdo->query(
+    "SELECT p.id, p.name, p.account_age_days,
+            e.kills, e.deaths, e.accuracy, e.session_minutes
+     FROM players p
+     JOIN events e ON e.player_id = p.id
+     WHERE e.id = (SELECT MAX(id) FROM events WHERE player_id = p.id)
+     ORDER BY p.id"
+);
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$results = array_map(function ($row) use ($pdo) {
+    $flags = detectAnomalies($pdo, $row);
+    return [
+        'id'               => (int) $row['id'],
+        'name'             => $row['name'],
+        'account_age_days' => (int) $row['account_age_days'],
+        'kills'            => (int) $row['kills'],
+        'deaths'           => (int) $row['deaths'],
+        'accuracy'         => (float) $row['accuracy'],
+        'session_minutes'  => (int) $row['session_minutes'],
+        'flagged'          => count($flags) > 0,
+        'flags'            => $flags,
+    ];
+}, $rows);
+
+echo json_encode($results);</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 12 -->
+  <div id="step-12" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">12</span>
+      <span class="font-medium text-text">api/player.php</span>
+      <span class="ml-auto px-2 py-0.5 rounded text-xs font-mono bg-blue/10 text-blue border border-blue/20">GET /api/player.php?id=N</span>
+    </div>
+    <div class="p-5">
+      <div class="note border-blue/40 bg-blue/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-text font-medium mb-1">Takes real user input — validate immediately</p>
+        <p>Unlike <code class="font-mono text-blue">players.php</code>, this takes a <code class="font-mono text-blue">?id=</code> query parameter. Cast to <code class="font-mono text-blue">(int)</code> immediately and reject anything that isn't a positive number. 400 = malformed input, 404 = valid id that doesn't exist.</p>
+      </div>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-php">&lt;?php
+// GET /api/player.php?id={id} — one player + full event history + flags.
+
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(200); exit; }
+
+require_once __DIR__ . '/db.php';
+
+$playerId = (int) ($_GET['id'] ?? 0);
+if ($playerId <= 0) {
+    http_response_code(400);
+    echo json_encode(['error' => 'Missing or invalid id parameter']);
+    exit;
+}
+
+$stmt = $pdo->prepare("SELECT id, name, account_age_days FROM players WHERE id = :id");
+$stmt->execute(['id' => $playerId]);
+$player = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$player) {
+    http_response_code(404);
+    echo json_encode(['error' => 'Player not found']);
+    exit;
+}
+
+$stmt = $pdo->prepare(
+    "SELECT kills, deaths, accuracy, session_minutes, recorded_at
+     FROM events WHERE player_id = :id ORDER BY recorded_at DESC"
+);
+$stmt->execute(['id' => $playerId]);
+$events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$latestEvent = array_merge($events[0] ?? [], ['account_age_days' => $player['account_age_days']]);
+$flags = $events ? detectAnomalies($pdo, $latestEvent) : [];
+
+echo json_encode(['player' => $player, 'events' => $events, 'flags' => $flags]);</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 13 -->
+  <div id="step-13" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">13</span>
+      <span class="font-medium text-text">Angular scaffold</span>
+      <span class="ml-auto text-xs font-mono text-dim">run on host, not in Docker</span>
+    </div>
+    <div class="p-5">
+      <div class="note border-red/40 bg-red/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-red font-semibold mb-1">Delete the placeholder folder first</p>
+        <p>At Step 7b you created a placeholder <code class="font-mono text-blue">frontend/</code> folder. The Angular CLI refuses to scaffold into an existing non-empty directory. Delete it first, then scaffold fresh.</p>
+      </div>
+      <div class="relative group mb-4">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-powershell">Remove-Item -Recurse -Force frontend
+npx -p @angular/cli@17 ng new frontend --routing=false --style=css --skip-git --skip-install</code></pre>
+      </div>
+      <div class="note border-amber/40 bg-amber/5 p-3 rounded text-xs text-dim">
+        <p class="text-text font-medium mb-1">Choose No for SSR. What gets generated:</p>
+        <p><code class="font-mono text-blue">package.json</code>, <code class="font-mono text-blue">angular.json</code>, <code class="font-mono text-blue">tsconfig.json</code>, <code class="font-mono text-blue">src/index.html</code>, <code class="font-mono text-blue">src/main.ts</code>, <code class="font-mono text-blue">src/styles.css</code>, <code class="font-mono text-blue">app/app.component.*</code>, and <code class="font-mono text-blue">app/app.config.ts</code> (standalone bootstrap — no <code class="font-mono text-blue">app.module.ts</code>). No <code class="font-mono text-blue">Dockerfile</code> — you add that at Step 14.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 14 -->
+  <div id="step-14" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">14</span>
+      <span class="font-medium text-text">frontend/Dockerfile</span>
+      <span class="ml-auto text-xs font-mono text-dim">replaces the placeholder</span>
+    </div>
+    <div class="p-5">
+      <div class="note border-blue/40 bg-blue/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-text font-medium mb-1">Local dev server only</p>
+        <p>Runs <code class="font-mono text-blue">ng serve</code> inside Docker with <code class="font-mono text-blue">--poll 500</code> for file-watching on Windows (filesystem events don't reliably propagate into Docker without polling). In production, Angular is built to static files by <code class="font-mono text-blue">Dockerfile.render</code> — no dev server.</p>
+      </div>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-dockerfile">FROM node:20-alpine
+
+RUN npm install -g @angular/cli@17
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+EXPOSE 4200
+
+CMD ["ng", "serve", "--host", "0.0.0.0", "--poll", "500"]</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 15 -->
+  <div id="step-15" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">15</span>
+      <span class="font-medium text-text">frontend/src/app/app.config.ts</span>
+      <span class="ml-auto px-2 py-0.5 rounded text-xs font-mono bg-red/10 text-red border border-red/20">required for HttpClient</span>
+    </div>
+    <div class="p-5">
+      <div class="note border-red/40 bg-red/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-red font-semibold mb-1">Do this before writing any components</p>
+        <p>Without <code class="font-mono text-blue">provideHttpClient()</code> here, Angular has no HTTP provider and every API call will fail with <code class="font-mono text-blue">NullInjectorError: No provider for HttpClient</code>. This is the standalone equivalent of adding <code class="font-mono text-blue">HttpClientModule</code> to <code class="font-mono text-blue">app.module.ts</code> in NgModule apps.</p>
+      </div>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-typescript">import { ApplicationConfig } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
+
+export const appConfig: ApplicationConfig = {
+  providers: [provideHttpClient()]
+};</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 16 -->
+  <div id="step-16" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">16</span>
+      <span class="font-medium text-text">frontend/src/app/services/player.service.ts</span>
+    </div>
+    <div class="p-5">
+      <div class="relative group mb-3">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-powershell">cd frontend
+npm install
+npx ng generate service app/services/player
+cd ..</code></pre>
+      </div>
+      <div class="note border-blue/40 bg-blue/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-text font-medium mb-1">Why npm install first</p>
+        <p><code class="font-mono text-blue">--skip-install</code> was used during scaffold so Docker handles installs inside the container. But you need <code class="font-mono text-blue">node_modules</code> on your host machine too to run <code class="font-mono text-blue">ng generate</code>. The <code class="font-mono text-blue">npm warn deprecated</code> messages are fine — they're warnings about Angular's own dependencies, not your code.</p>
+      </div>
+      <p class="text-xs text-dim font-medium mb-2">Then replace the generated file content with:</p>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-typescript">import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+// providedIn: 'root' = one singleton shared across the whole app.
+@Injectable({ providedIn: 'root' })
+export class PlayerService {
+
+  // Port 4200 = Angular dev server directly → needs full URL to Nginx on :8080.
+  // Otherwise (through Nginx or production) → relative /api works same-origin.
+  private apiUrl = window.location.port === '4200'
+    ? 'http://localhost:8080/api'
+    : '/api';
+
+  constructor(private http: HttpClient) {}
+
+  // Called by DashboardComponent on page load.
+  getPlayers(): Observable&lt;any&gt; {
+    return this.http.get(`${this.apiUrl}/players.php`);
+  }
+
+  // Called by PlayerDetailComponent when a row is clicked.
+  getPlayer(id: number): Observable&lt;any&gt; {
+    return this.http.get(`${this.apiUrl}/player.php?id=${id}`);
+  }
+}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 17 -->
+  <div id="step-17" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">17</span>
+      <span class="font-medium text-text">Generate components</span>
+    </div>
+    <div class="p-5">
+      <div class="note border-blue/40 bg-blue/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-text font-medium mb-1">Use ng generate, not mkdir</p>
+        <p>This creates the <code class="font-mono text-blue">.ts</code>, <code class="font-mono text-blue">.html</code>, and <code class="font-mono text-blue">.css</code> files for each component already wired together. Run from inside the <code class="font-mono text-blue">frontend/</code> folder.</p>
+      </div>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-powershell">cd frontend
+npx ng generate component app/components/dashboard
+npx ng generate component app/components/player-detail
+cd ..</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 18 -->
+  <div id="step-18" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">18</span>
+      <span class="font-medium text-text">Dashboard component</span>
+      <span class="ml-auto text-xs font-mono text-dim">3 files</span>
+    </div>
+    <div class="p-5">
+      <div class="note border-amber/40 bg-amber/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-text font-medium mb-1">standalone: true is required on every component</p>
+        <p>Angular 17's <code class="font-mono text-blue">ng generate</code> creates components without <code class="font-mono text-blue">standalone: true</code> by default. You must add it manually. Without it, importing a component into another component's <code class="font-mono text-blue">imports</code> array throws <code class="font-mono text-red">TS-992011: not standalone and cannot be imported directly</code>. Also import <code class="font-mono text-blue">CommonModule</code> for <code class="font-mono text-blue">*ngFor</code> and <code class="font-mono text-blue">*ngIf</code> to work.</p>
+      </div>
+      <p class="text-xs text-dim font-medium mb-2">dashboard.component.ts</p>
+      <div class="relative group mb-4">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-typescript">import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { PlayerService } from '../../services/player.service';
+import { PlayerDetailComponent } from '../player-detail/player-detail.component';
+
+@Component({
+  selector: 'app-dashboard',
+  standalone: true,                                    // required
+  imports: [CommonModule, PlayerDetailComponent],      // CommonModule for *ngFor/*ngIf
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css']
+})
+export class DashboardComponent implements OnInit {
+  players: any[] = [];
+  selectedPlayerId: number | null = null;
+
+  constructor(private playerService: PlayerService) {}
+
+  ngOnInit() { this.loadPlayers(); }
+
+  loadPlayers() {
+    this.playerService.getPlayers().subscribe({
+      next: (data) => {
+        this.players = data.sort((a: any, b: any) =>
+          (b.flagged ? 1 : 0) - (a.flagged ? 1 : 0)
+        );
+      },
+      error: (err) => console.error('Failed to load players:', err)
+    });
+  }
+
+  selectPlayer(id: number) { this.selectedPlayerId = id; }
+  closeDetail() { this.selectedPlayerId = null; }
+}</code></pre>
+      </div>
+      <p class="text-xs text-dim font-medium mb-2">dashboard.component.html</p>
+      <div class="relative group mb-4">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-html">&lt;div class="dashboard"&gt;
+  &lt;table&gt;
+    &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th&gt;Status&lt;/th&gt;
+        &lt;th&gt;Name&lt;/th&gt;
+        &lt;th&gt;Account Age&lt;/th&gt;
+        &lt;th&gt;Accuracy&lt;/th&gt;
+        &lt;th&gt;K/D&lt;/th&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;tr *ngFor="let p of players"
+          [class.flagged]="p.flagged"
+          (click)="selectPlayer(p.id)"&gt;
+        &lt;td&gt;
+          &lt;span *ngIf="p.flagged" class="badge-flagged"&gt;⚠️ Flagged&lt;/span&gt;
+          &lt;span *ngIf="!p.flagged" class="badge-clean"&gt;Clean&lt;/span&gt;
+        &lt;/td&gt;
+        &lt;td&gt;{{ p.name }}&lt;/td&gt;
+        &lt;td&gt;{{ p.account_age_days }}d&lt;/td&gt;
+        &lt;td&gt;{{ p.accuracy }}%&lt;/td&gt;
+        &lt;td&gt;{{ p.kills }}/{{ p.deaths }}&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+
+  &lt;app-player-detail
+    *ngIf="selectedPlayerId"
+    [playerId]="selectedPlayerId"
+    (close)="closeDetail()"&gt;
+  &lt;/app-player-detail&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+      <p class="text-xs text-dim font-medium mb-2">dashboard.component.css</p>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-css">.dashboard {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #161b22;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #21262d;
+}
+
+thead { background: #1c2128; }
+
+th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #8b949e;
+  border-bottom: 1px solid #21262d;
+}
+
+td {
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #e6edf3;
+  border-bottom: 1px solid #21262d;
+}
+
+tr:last-child td { border-bottom: none; }
+
+tbody tr { cursor: pointer; transition: background 0.1s; }
+tbody tr:hover { background: #1c2128; }
+tbody tr.flagged { background: #1a0a0a; }
+tbody tr.flagged:hover { background: #220d0d; }
+tbody tr.flagged td { color: #e6edf3; }
+
+.badge-flagged {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #f85149;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.badge-clean {
+  color: #3fb950;
+  font-size: 12px;
+}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 19 -->
+  <div id="step-19" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">19</span>
+      <span class="font-medium text-text">Player-detail component</span>
+      <span class="ml-auto text-xs font-mono text-dim">3 files</span>
+    </div>
+    <div class="p-5">
+      <div class="note border-amber/40 bg-amber/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-text font-medium mb-1">standalone: true required here too</p>
+        <p>Same as the dashboard component — add <code class="font-mono text-blue">standalone: true</code> and <code class="font-mono text-blue">CommonModule</code> to the generated file. Uses <code class="font-mono text-blue">OnChanges</code> instead of <code class="font-mono text-blue">OnInit</code> so it re-fetches if a different row is clicked while the popup is already open.</p>
+      </div>
+      <p class="text-xs text-dim font-medium mb-2">player-detail.component.ts</p>
+      <div class="relative group mb-4">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-typescript">import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { PlayerService } from '../../services/player.service';
+
+@Component({
+  selector: 'app-player-detail',
+  standalone: true,              // required
+  imports: [CommonModule],       // needed for *ngIf and *ngFor in template
+  templateUrl: './player-detail.component.html',
+  styleUrls: ['./player-detail.component.css']
+})
+export class PlayerDetailComponent implements OnChanges {
+  @Input() playerId!: number;
+  @Output() close = new EventEmitter&lt;void&gt;();
+  data: any = null;
+
+  constructor(private playerService: PlayerService) {}
+
+  // OnChanges fires whenever @Input() changes — handles both first mount
+  // and switching to a different player while the popup is already open.
+  ngOnChanges() {
+    if (this.playerId) {
+      this.playerService.getPlayer(this.playerId).subscribe({
+        next: (result) => this.data = result,
+        error: (err) => console.error('Failed to load player detail:', err)
+      });
+    }
+  }
+}</code></pre>
+      </div>
+      <p class="text-xs text-dim font-medium mb-2">player-detail.component.html</p>
+      <div class="relative group mb-4">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-html">&lt;div class="backdrop" (click)="close.emit()"&gt;
+  &lt;div class="modal" (click)="$event.stopPropagation()"&gt;
+    &lt;button class="close-btn" (click)="close.emit()"&gt;✕&lt;/button&gt;
+    &lt;ng-container *ngIf="data"&gt;
+      &lt;h2&gt;{{ data.player.name }}&lt;/h2&gt;
+      &lt;p&gt;Account age: {{ data.player.account_age_days }} days&lt;/p&gt;
+      &lt;div *ngIf="data.flags.length" class="flags"&gt;
+        &lt;h3&gt;⚠️ Flags&lt;/h3&gt;
+        &lt;ul&gt;&lt;li *ngFor="let f of data.flags"&gt;{{ f }}&lt;/li&gt;&lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;h3&gt;Event History&lt;/h3&gt;
+      &lt;table&gt;
+        &lt;thead&gt;&lt;tr&gt;
+          &lt;th&gt;Kills&lt;/th&gt;&lt;th&gt;Deaths&lt;/th&gt;
+          &lt;th&gt;Accuracy&lt;/th&gt;&lt;th&gt;Session&lt;/th&gt;&lt;th&gt;Recorded&lt;/th&gt;
+        &lt;/tr&gt;&lt;/thead&gt;
+        &lt;tbody&gt;
+          &lt;tr *ngFor="let e of data.events"&gt;
+            &lt;td&gt;{{ e.kills }}&lt;/td&gt;&lt;td&gt;{{ e.deaths }}&lt;/td&gt;
+            &lt;td&gt;{{ e.accuracy }}%&lt;/td&gt;&lt;td&gt;{{ e.session_minutes }}m&lt;/td&gt;
+            &lt;td&gt;{{ e.recorded_at }}&lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+    &lt;/ng-container&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+      <p class="text-xs text-dim font-medium mb-2">player-detail.component.css</p>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-css">.backdrop {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #161b22;
+  border: 1px solid #21262d;
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 620px; width: 90%; max-height: 80vh;
+  overflow-y: auto; position: relative;
+  color: #e6edf3;
+}
+
+.modal h2 { color: #e6edf3; font-size: 18px; margin: 0 0 4px 0; }
+.modal p  { color: #8b949e; font-size: 13px; margin: 0 0 16px 0; }
+.modal h3 { color: #e6edf3; font-size: 14px; margin: 16px 0 8px 0; }
+
+.close-btn {
+  position: absolute; top: 12px; right: 12px;
+  background: none; border: none; color: #8b949e;
+  font-size: 18px; cursor: pointer;
+}
+.close-btn:hover { color: #e6edf3; }
+
+.flags {
+  background: #1a0a0a; border: 1px solid #f85149;
+  border-radius: 6px; padding: 12px 16px; margin-bottom: 16px;
+}
+.flags h3 { color: #f85149; margin: 0 0 8px 0; }
+.flags ul { margin: 0; padding-left: 16px; }
+.flags ul li { color: #e6edf3; font-size: 13px; line-height: 1.6; }
+
+table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+th {
+  padding: 8px 12px; text-align: left;
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  color: #8b949e; border-bottom: 1px solid #21262d;
+}
+td { padding: 8px 12px; font-size: 13px; color: #e6edf3; border-bottom: 1px solid #21262d; }
+tr:last-child td { border-bottom: none; }</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 20 -->
+  <div id="step-20" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">20</span>
+      <span class="font-medium text-text">Wire app root</span>
+    </div>
+    <div class="p-5">
+      <div class="note border-amber/40 bg-amber/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-text font-medium mb-1">Two things to do</p>
+        <p>1. Replace <code class="font-mono text-blue">app.component.html</code> content. 2. Add <code class="font-mono text-blue">DashboardComponent</code> to <code class="font-mono text-blue">app.component.ts</code> imports. Both are required — the template references <code class="font-mono text-blue">app-dashboard</code> but Angular won't recognize the selector unless it's in the imports array.</p>
+      </div>
+      <p class="text-xs text-dim font-medium mb-2">app.component.html — replace ALL default content:</p>
+      <div class="relative group mb-4">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-html">&lt;app-dashboard&gt;&lt;/app-dashboard&gt;</code></pre>
+      </div>
+      <p class="text-xs text-dim font-medium mb-2">app.component.ts — add DashboardComponent to imports:</p>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-typescript">import { Component } from '@angular/core';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [DashboardComponent],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css'
+})
+export class AppComponent {
+  title = 'frontend';
+}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 21 -->
+  <div id="step-21" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">21</span>
+      <span class="font-medium text-text">frontend/src/styles.css</span>
+      <span class="ml-auto px-2 py-0.5 rounded text-xs font-mono bg-red/10 text-red border border-red/20">required — sets dark background</span>
+    </div>
+    <div class="p-5">
+      <div class="note border-red/40 bg-red/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-red font-semibold mb-1">Without this the app looks broken</p>
+        <p>The component CSS is designed for dark backgrounds, but browsers default to white. Without setting the global background here, you get dark text on a white background making it nearly unreadable. This file already exists from the scaffold — just replace its contents.</p>
+      </div>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-css">* {
+  box-sizing: border-box;
+}
+
+body {
+  background: #0d1117;
+  color: #e6edf3;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 22 -->
+  <div id="step-22" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-green flex items-center justify-center text-xs font-mono font-bold text-base">✓</span>
+      <span class="font-medium text-text">Local verification</span>
+      <span class="ml-auto px-2 py-0.5 rounded text-xs font-mono bg-green/10 text-green border border-green/20">Part 1 complete</span>
+    </div>
+    <div class="p-5">
+      <div class="relative group mb-4">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-powershell">make down
+make up</code></pre>
+      </div>
+      <p class="text-sm text-dim mb-3">Wait ~60 seconds for the Angular container to finish installing and building. Then visit <code class="font-mono text-blue">http://localhost:8080</code></p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div class="p-3 rounded bg-green/5 border border-green/20 text-xs">
+          <p class="text-green font-semibold mb-1">Expected</p>
+          <p class="text-dim">Dark background. 6 flagged players sorted to top with red badges. 20 clean players below. Click any row to see the detail popup with flag reasons and event history.</p>
+        </div>
+        <div class="p-3 rounded bg-red/5 border border-red/20 text-xs">
+          <p class="text-red font-semibold mb-1">Still seeing 502?</p>
+          <p class="text-dim">Run <code class="font-mono">docker compose logs frontend</code> — Angular is likely still building. Wait another 30 seconds and refresh. The container shows "Up" before Angular finishes its first build.</p>
+        </div>
+      </div>
+      <div class="mt-3 p-3 rounded bg-amber/5 border border-amber/20 text-xs text-dim">
+        <p class="text-amber font-semibold mb-1">If the table is empty (white page, no data)</p>
+        <p>Open browser DevTools → Console. Any red error starting with <code class="font-mono">NullInjectorError</code> means <code class="font-mono text-blue">provideHttpClient()</code> is missing from <code class="font-mono text-blue">app.config.ts</code> (Step 15). Any error with <code class="font-mono">SyntaxError</code> or <code class="font-mono">not valid JSON</code> means <code class="font-mono text-blue">db.php</code> is missing the <code class="font-mono text-blue">&lt;?php</code> tag on line 1 (Step 10).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PART 2 -->
+  <div class="flex items-center gap-4 my-8">
+    <div class="h-px flex-1 bg-border"></div>
+    <span class="px-4 py-1.5 rounded-full text-sm font-semibold bg-purple/10 text-purple border border-purple/20">Part 2 — Render + Aiven Production</span>
+    <div class="h-px flex-1 bg-border"></div>
+  </div>
+
+  <div class="mb-6 p-4 rounded-lg bg-surface border border-border text-xs text-dim">
+    Production replaces 5 local containers with <strong class="text-text">one container</strong> running Nginx and PHP-FPM via <code class="font-mono text-blue">supervisord</code>, serving a pre-built Angular bundle from <code class="font-mono text-blue">ng build</code>, connecting to <strong class="text-text">Aiven MySQL</strong>. Same PHP API and Angular code — only 4 infra files change.
+  </div>
+
+  <!-- STEP 23 -->
+  <div id="step-23" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">23</span>
+      <span class="font-medium text-text">Set up Aiven MySQL</span>
+    </div>
+    <div class="p-5">
+      <div class="space-y-3 mb-4">
+        <div class="flex gap-3 text-xs"><span class="w-5 h-5 rounded-full bg-blue/20 text-blue flex items-center justify-center shrink-0 font-mono font-bold">1</span><p class="text-dim pt-0.5">Create a free account at <code class="font-mono text-blue">aiven.io</code>, create a MySQL service. Write down <strong class="text-text">Host</strong>, <strong class="text-text">Port</strong>, <strong class="text-text">User</strong> (usually avnadmin), <strong class="text-text">Password</strong>, <strong class="text-text">Database name</strong>.</p></div>
+        <div class="flex gap-3 text-xs"><span class="w-5 h-5 rounded-full bg-blue/20 text-blue flex items-center justify-center shrink-0 font-mono font-bold">2</span><p class="text-dim pt-0.5">Aiven requires SSL. <code class="font-mono text-blue">db.php</code> handles this via <code class="font-mono text-blue">MYSQL_SSL=true</code> — no cert file needed.</p></div>
+        <div class="flex gap-3 text-xs"><span class="w-5 h-5 rounded-full bg-blue/20 text-blue flex items-center justify-center shrink-0 font-mono font-bold">3</span><p class="text-dim pt-0.5">Seed Aiven from your local machine — password is prompted interactively (stays out of shell history):</p></div>
+      </div>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-bash">mysql --host=&lt;aiven-host&gt; --port=&lt;aiven-port&gt; --user=&lt;aiven-user&gt; -p \
+  --ssl-mode=REQUIRED &lt;aiven-database-name&gt; &lt; sql/schema.sql
+
+mysql --host=&lt;aiven-host&gt; --port=&lt;aiven-port&gt; --user=&lt;aiven-user&gt; -p \
+  --ssl-mode=REQUIRED &lt;aiven-database-name&gt; &lt; sql/seed.sql</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 24 -->
+  <div id="step-24" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">24</span>
+      <span class="font-medium text-text">Dockerfile.render</span>
+      <span class="ml-auto text-xs font-mono text-dim">multi-stage</span>
+    </div>
+    <div class="p-5">
+      <div class="note border-red/40 bg-red/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-red font-semibold mb-1">⚠ Check the Angular output path</p>
+        <p>The <code class="font-mono text-blue">COPY --from=angular-build /app/dist/frontend/browser/</code> path must match what <code class="font-mono text-blue">ng build</code> actually produces. Run <code class="font-mono text-blue">npx ng build --configuration production</code> locally and check <code class="font-mono text-blue">frontend/dist/</code> to confirm the exact path before deploying.</p>
+      </div>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-dockerfile"># Stage 1: Build Angular static files
+FROM node:20-alpine AS angular-build
+WORKDIR /app
+COPY frontend/package*.json ./
+RUN npm install
+COPY frontend/ .
+RUN npx ng build --configuration production
+
+# Stage 2: PHP + Nginx + supervisord (the actual running image)
+FROM php:8.5-fpm
+RUN apt-get update && apt-get install -y \
+    nginx supervisor libpng-dev libzip-dev unzip gettext-base \
+  && docker-php-ext-install pdo pdo_mysql mysqli zip \
+  && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN echo "log_errors = On\nerror_log = /dev/stderr\ndisplay_errors = Off" >> /usr/local/etc/php/php.ini
+
+RUN sed -i 's|listen = /var/run/php/php-fpm.sock|listen = 127.0.0.1:9000|' \
+    /usr/local/etc/php-fpm.d/www.conf || true
+RUN sed -i 's|listen = /var/run/php.*\.sock|listen = 127.0.0.1:9000|' \
+    /usr/local/etc/php-fpm.d/www.conf || true
+
+# Adjust this path to match your actual ng build output
+COPY --from=angular-build /app/dist/frontend/browser/ /var/www/html/
+COPY api/ /var/www/api/
+COPY nginx/render.conf /etc/nginx/conf.d/render.conf.template
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
+ENV PORT=10000
+EXPOSE 10000
+CMD ["/start.sh"]</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 25 -->
+  <div id="step-25" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">25</span>
+      <span class="font-medium text-text">nginx/render.conf</span>
+    </div>
+    <div class="p-5">
+      <div class="note border-blue/40 bg-blue/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-text font-medium mb-1">Key differences from default.conf</p>
+        <p><code class="font-mono text-blue">listen ${PORT}</code> is a template — <code class="font-mono text-blue">start.sh</code> replaces it with Render's actual port via <code class="font-mono text-blue">envsubst</code>. <code class="font-mono text-blue">fastcgi_pass 127.0.0.1:9000</code> (localhost) instead of <code class="font-mono text-blue">app:9000</code> — Nginx and PHP-FPM are in the same container now. The <code class="font-mono text-blue">try_files ... /index.html</code> fallback makes Angular's client-side routing work.</p>
+      </div>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-nginx">server {
+    listen ${PORT} default_server;
+    root /var/www/html;
+    index index.html;
+
+    location /api/ {
+        root /var/www;
+        try_files $uri =404;
+        fastcgi_pass 127.0.0.1:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 26 -->
+  <div id="step-26" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">26</span>
+      <span class="font-medium text-text">supervisord.conf</span>
+    </div>
+    <div class="p-5">
+      <div class="note border-blue/40 bg-blue/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-text font-medium mb-1">Why this is needed</p>
+        <p>Docker expects one process per container. Locally, Nginx and PHP-FPM are separate containers. In production they're in the same container, so <code class="font-mono text-blue">supervisord</code> runs both, restarts either if it crashes, and forwards logs to stdout/stderr so Render's log viewer shows them. <code class="font-mono text-blue">nodaemon=true</code> keeps supervisord in the foreground — Docker requires this.</p>
+      </div>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-ini">[supervisord]
+nodaemon=true
+logfile=/dev/null
+logfile_maxbytes=0
+
+[program:php-fpm]
+command=/usr/local/sbin/php-fpm --nodaemonize
+autostart=true
+autorestart=true
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
+
+[program:nginx]
+command=/usr/sbin/nginx -g "daemon off;"
+autostart=true
+autorestart=true
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 27 -->
+  <div id="step-27" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">27</span>
+      <span class="font-medium text-text">start.sh</span>
+    </div>
+    <div class="p-5">
+      <div class="note border-blue/40 bg-blue/5 p-3 rounded mb-4 text-xs text-dim">
+        <p class="text-text font-medium mb-1">Injects Render's dynamic $PORT</p>
+        <p>Render assigns a random port at runtime. Nginx config is static and can't read env vars directly. <code class="font-mono text-blue">envsubst</code> replaces <code class="font-mono text-blue">${PORT}</code> in the template with the actual value, writes the real config, then <code class="font-mono text-blue">exec supervisord</code> starts both processes.</p>
+      </div>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-bash">#!/bin/sh
+PORT=${PORT:-10000}
+
+echo "Starting with PORT=$PORT"
+
+envsubst '${PORT}' < /etc/nginx/conf.d/render.conf.template > /etc/nginx/conf.d/default.conf
+
+rm /etc/nginx/conf.d/render.conf.template
+
+exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 28 -->
+  <div id="step-28" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">28</span>
+      <span class="font-medium text-text">Push to GitHub</span>
+    </div>
+    <div class="p-5">
+      <div class="note border-amber/40 bg-amber/5 p-3 rounded mb-4 text-xs text-dim">
+        Run <code class="font-mono text-blue">git status</code> before committing and confirm <code class="font-mono text-blue">.env</code> and <code class="font-mono text-blue">node_modules/</code> are not listed. If they appear, your <code class="font-mono text-blue">.gitignore</code> from Step 1 isn't working.
+      </div>
+      <div class="relative group">
+        <button class="copy-btn absolute top-2 right-2 px-2 py-1 text-xs text-dim rounded bg-muted/50 font-mono z-10" onclick="copyCode(this)">copy</button>
+        <pre><code class="language-powershell">git init
+git add .
+git commit -m "Initial commit"
+git remote add origin https://github.com/&lt;your-username&gt;/minidashy.git
+git push -u origin main</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 29 -->
+  <div id="step-29" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-mono font-bold text-dim">29</span>
+      <span class="font-medium text-text">Create the Render Web Service</span>
+    </div>
+    <div class="p-5">
+      <div class="space-y-3 mb-5">
+        <div class="flex gap-3 text-xs"><span class="w-5 h-5 rounded-full bg-purple/20 text-purple flex items-center justify-center shrink-0 font-mono font-bold">1</span><p class="text-dim pt-0.5">Render dashboard → New Web Service → connect your GitHub repo.</p></div>
+        <div class="flex gap-3 text-xs"><span class="w-5 h-5 rounded-full bg-purple/20 text-purple flex items-center justify-center shrink-0 font-mono font-bold">2</span><p class="text-dim pt-0.5">Set <strong class="text-text">Dockerfile Path</strong> to <code class="font-mono text-blue">Dockerfile.render</code> — not the default <code class="font-mono text-blue">Dockerfile</code>.</p></div>
+        <div class="flex gap-3 text-xs"><span class="w-5 h-5 rounded-full bg-purple/20 text-purple flex items-center justify-center shrink-0 font-mono font-bold">3</span><p class="text-dim pt-0.5">Add environment variables. Do NOT add PORT — Render sets it automatically.</p></div>
+      </div>
+      <div class="overflow-x-auto mb-3">
+        <table class="w-full text-xs border-collapse">
+          <thead><tr class="border-b border-border"><th class="text-left py-2 px-3 text-dim font-medium">Key</th><th class="text-left py-2 px-3 text-dim font-medium">Value</th></tr></thead>
+          <tbody>
+            <tr class="border-b border-border/50"><td class="py-2 px-3 font-mono text-blue">MYSQL_HOST</td><td class="py-2 px-3 text-dim">your Aiven host</td></tr>
+            <tr class="border-b border-border/50"><td class="py-2 px-3 font-mono text-blue">MYSQL_PORT</td><td class="py-2 px-3 text-dim">your Aiven port</td></tr>
+            <tr class="border-b border-border/50"><td class="py-2 px-3 font-mono text-blue">MYSQL_DATABASE</td><td class="py-2 px-3 text-dim">your Aiven database name</td></tr>
+            <tr class="border-b border-border/50"><td class="py-2 px-3 font-mono text-blue">MYSQL_USER</td><td class="py-2 px-3 text-dim">your Aiven user</td></tr>
+            <tr class="border-b border-border/50"><td class="py-2 px-3 font-mono text-blue">MYSQL_PASSWORD</td><td class="py-2 px-3 text-dim">your Aiven password</td></tr>
+            <tr><td class="py-2 px-3 font-mono text-blue">MYSQL_SSL</td><td class="py-2 px-3 text-green font-mono">true</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 30 -->
+  <div id="step-30" class="step-card mb-6 rounded-lg border border-border bg-surface overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-border bg-base/50">
+      <span class="w-7 h-7 rounded-full bg-green flex items-center justify-center text-xs font-mono font-bold text-base">✓</span>
+      <span class="font-medium text-text">Production verification</span>
+      <span class="ml-auto px-2 py-0.5 rounded text-xs font-mono bg-purple/10 text-purple border border-purple/20">Part 2 complete</span>
+    </div>
+    <div class="p-5 space-y-2 text-xs">
+      <div class="flex gap-2 items-start"><span class="text-green mt-0.5">□</span><p class="text-dim">Visit Render URL root — Angular loads (confirms ng build output path matched)</p></div>
+      <div class="flex gap-2 items-start"><span class="text-green mt-0.5">□</span><p class="text-dim">Visit <code class="font-mono text-blue">&lt;render-url&gt;/api/players.php</code> — returns JSON array (confirms PHP-FPM + Nginx + Aiven all work)</p></div>
+      <div class="flex gap-2 items-start"><span class="text-green mt-0.5">□</span><p class="text-dim">Check Render's log viewer — PHP errors appear here, not in JSON responses</p></div>
+      <div class="flex gap-2 items-start"><span class="text-amber mt-0.5">!</span><p class="text-dim">500 on players.php? The error message from db.php's catch block will tell you if it's credentials or SSL</p></div>
+      <div class="flex gap-2 items-start"><span class="text-dim mt-0.5">i</span><p class="text-dim">Free tier spins down after 15 min idle — first request back takes ~30 seconds. Normal.</p></div>
+    </div>
+  </div>
+
+  <!-- FILE INVENTORY -->
+  <div id="file-inventory" class="mb-6 p-5 rounded-lg border border-border bg-surface">
+    <h2 class="text-xs font-semibold text-dim uppercase tracking-widest mb-4">File inventory</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+      <div><p class="text-amber font-semibold mb-2">Local-only</p><ul class="space-y-1 text-dim font-mono"><li>.env</li><li>Dockerfile</li><li>docker-compose.yml</li><li>nginx/default.conf</li><li>frontend/Dockerfile</li></ul></div>
+      <div><p class="text-purple font-semibold mb-2">Production-only</p><ul class="space-y-1 text-dim font-mono"><li>Dockerfile.render</li><li>nginx/render.conf</li><li>supervisord.conf</li><li>start.sh</li></ul></div>
+      <div><p class="text-green font-semibold mb-2">Shared (unchanged)</p><ul class="space-y-1 text-dim font-mono"><li>Makefile · .gitignore · .dockerignore</li><li>api/db.php · api/players.php · api/player.php</li><li>sql/schema.sql · sql/seed.sql</li><li>frontend/src/app/**</li></ul></div>
+    </div>
+  </div>
+
+  <!-- LESSONS LEARNED -->
+  <div id="lessons" class="mb-10 p-5 rounded-lg border border-amber/30 bg-amber/5">
+    <h2 class="text-xs font-semibold text-amber uppercase tracking-widest mb-4">Lessons learned from the real build</h2>
+    <div class="space-y-3 text-xs">
+      <div class="flex gap-3"><span class="text-red font-bold shrink-0">1</span><div><p class="text-text font-medium">Docker aborts the entire build if any Dockerfile is empty</p><p class="text-dim mt-0.5">Even if <code class="font-mono">frontend/</code> isn't ready, a one-line placeholder keeps all other containers running. This is why Step 7b exists as a separate step now.</p></div></div>
+      <div class="flex gap-3"><span class="text-red font-bold shrink-0">2</span><div><p class="text-text font-medium">&lt;?php must be on line 1 — nothing before it</p><p class="text-dim mt-0.5">Even a comment before <code class="font-mono">&lt;?php</code> causes PHP to serve the file as plain text. Angular receives the comment text, fails to parse it as JSON, and gives a confusing SyntaxError that doesn't mention PHP at all.</p></div></div>
+      <div class="flex gap-3"><span class="text-red font-bold shrink-0">3</span><div><p class="text-text font-medium">Angular 17 defaults to standalone — not NgModule</p><p class="text-dim mt-0.5">Every component needs <code class="font-mono">standalone: true</code> and <code class="font-mono">CommonModule</code> in its imports for <code class="font-mono">*ngFor</code> and <code class="font-mono">*ngIf</code> to work. <code class="font-mono">provideHttpClient()</code> goes in <code class="font-mono">app.config.ts</code>, not <code class="font-mono">app.module.ts</code>.</p></div></div>
+      <div class="flex gap-3"><span class="text-red font-bold shrink-0">4</span><div><p class="text-text font-medium">Global styles.css must set the dark background</p><p class="text-dim mt-0.5">Component CSS is scoped. The browser default is white. Without <code class="font-mono">body { background: #0d1117 }</code> in <code class="font-mono">styles.css</code>, the dark-on-dark component styles render as dark text on white — nearly unreadable.</p></div></div>
+      <div class="flex gap-3"><span class="text-amber font-bold shrink-0">5</span><div><p class="text-text font-medium">The 502 shows "Up" before Angular finishes building</p><p class="text-dim mt-0.5">The container starts and Docker marks it running, but Angular's first build inside the container takes ~60 seconds. A 502 right after <code class="font-mono">make up</code> usually just means wait — check <code class="font-mono">docker compose logs frontend</code> to confirm.</p></div></div>
+    </div>
+  </div>
+
+  <!-- SMOKE TESTS -->
+  <div id="smoke-tests" class="mb-10 rounded-lg border border-green/30 bg-green/5 overflow-hidden">
+    <div class="flex items-center gap-3 px-5 py-3 border-b border-green/20">
+      <span class="text-green text-lg">✓</span>
+      <span class="font-medium text-text">Smoke Test Results — PHP 8.5 + real MySQL</span>
+      <span class="ml-auto px-2 py-0.5 rounded text-xs font-mono bg-green/20 text-green">7/7 PASS</span>
+    </div>
+    <div class="p-5">
+      <div class="overflow-x-auto mb-4">
+        <table class="w-full text-xs border-collapse">
+          <thead><tr class="border-b border-green/20"><th class="text-left py-2 px-3 text-dim font-medium">#</th><th class="text-left py-2 px-3 text-dim font-medium">Test</th><th class="text-left py-2 px-3 text-dim font-medium">Result</th></tr></thead>
+          <tbody class="divide-y divide-green/10">
+            <tr><td class="py-2 px-3 font-mono text-dim">1</td><td class="py-2 px-3 text-dim">players.php — 26 players, 6 flagged, 20 clean, rules disjoint</td><td class="py-2 px-3 text-green font-semibold">✓ PASS</td></tr>
+            <tr><td class="py-2 px-3 font-mono text-dim">2</td><td class="py-2 px-3 text-dim">player.php?id=26 — returns statistical flag</td><td class="py-2 px-3 text-green font-semibold">✓ PASS</td></tr>
+            <tr><td class="py-2 px-3 font-mono text-dim">3</td><td class="py-2 px-3 text-dim">player.php?id=1 — clean player, empty flags</td><td class="py-2 px-3 text-green font-semibold">✓ PASS</td></tr>
+            <tr><td class="py-2 px-3 font-mono text-dim">4</td><td class="py-2 px-3 text-dim">player.php?id=0 — HTTP 400</td><td class="py-2 px-3 text-green font-semibold">✓ PASS</td></tr>
+            <tr><td class="py-2 px-3 font-mono text-dim">5</td><td class="py-2 px-3 text-dim">player.php?id=9999 — HTTP 404</td><td class="py-2 px-3 text-green font-semibold">✓ PASS</td></tr>
+            <tr><td class="py-2 px-3 font-mono text-dim">6</td><td class="py-2 px-3 text-dim">players.php via POST — HTTP 405</td><td class="py-2 px-3 text-green font-semibold">✓ PASS</td></tr>
+            <tr><td class="py-2 px-3 font-mono text-dim">7</td><td class="py-2 px-3 text-dim">db.php SSL constant branch on PHP 8.5</td><td class="py-2 px-3 text-green font-semibold">✓ PASS</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<script>
+  hljs.highlightAll();
+
+  function copyCode(btn) {
+    const code = btn.closest('.relative').querySelector('code');
+    navigator.clipboard.writeText(code.innerText).then(() => {
+      btn.textContent = 'copied!';
+      btn.classList.add('text-green');
+      setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('text-green'); }, 1500);
+    });
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+          link.classList.remove('active', 'text-blue');
+          if (link.getAttribute('href') === '#' + entry.target.id) {
+            link.classList.add('active', 'text-blue');
+          }
+        });
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  document.querySelectorAll('.step-card, #file-inventory, #smoke-tests, #lessons').forEach(el => {
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>

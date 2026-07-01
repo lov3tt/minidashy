@@ -1,0 +1,31 @@
+<div class="dashboard">
+  <table>
+    <thead>
+      <tr>
+        <th>Status</th><th>Name</th>
+        <th>Account Age</th><th>Accuracy</th><th>K/D</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of players"
+          [class.flagged]="p.flagged"
+          (click)="selectPlayer(p.id)">
+        <td>
+          <span *ngIf="p.flagged" class="badge-flagged">⚠️ Flagged</span>
+          <span *ngIf="!p.flagged" class="badge-clean">Clean</span>
+        </td>
+        <td>{{ p.name }}</td>
+        <td>{{ p.account_age_days }}d</td>
+        <td>{{ p.accuracy }}%</td>
+        <td>{{ p.kills }}/{{ p.deaths }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- *ngIf mounts/unmounts the popup based on selectedPlayerId -->
+  <app-player-detail
+    *ngIf="selectedPlayerId"
+    [playerId]="selectedPlayerId"
+    (close)="closeDetail()">
+  </app-player-detail>
+</div>
